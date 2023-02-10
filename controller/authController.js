@@ -8,7 +8,8 @@ export const registerUser = async (req, res) => {
         firstname,
         lastname,
         email,
-        password
+        password,
+        favorites: []
     }
     if (!firstname || !lastname || !email || !password) {
         res.status(400).json({ message: "Please insert information" })
@@ -28,17 +29,14 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     const { email, password } = req.body
     const db = await getDb()
-    console.log(email, password)
     if (!email || !password) {
         res.status(400).json({ message: "Please insert information" })
+        return
     }
     const user = await db.collection("user").findOne({ email })
     if (!user) {
         res.status(400).json({ message: "user does not exists" })
     }
-    console.log(user)
-    console.log(password)
-    console.log(user.password)
     if (password !== user.password) {
         res.status(400).json({ message: "email or password is not correct" })
     } else {

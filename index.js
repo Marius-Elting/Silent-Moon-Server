@@ -4,6 +4,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import { loginUser, registerUser } from './controller/authController.js'
 import { encrypt } from './middleware/auth.js'
+import { addFavorite } from './controller/FavoriteController.js'
 
 
 const PORT = process.env.PORT
@@ -16,6 +17,7 @@ app.use(express.json())
 
 app.post('/api/register', encrypt, registerUser)
 app.post('/api/login', encrypt, loginUser)
+app.post('/api/addFavorite', addFavorite)
 
 
 
