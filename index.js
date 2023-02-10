@@ -2,21 +2,22 @@ import './config.js'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
+import { loginUser, registerUser } from './controller/authController.js'
+import { encrypt } from './middleware/auth.js'
 
 
-// Falls ihr multer oder den express validator nutzt, importiert diese einfach auch
 const PORT = process.env.PORT
 const app = express()
 
 app.use(morgan('dev'))
 app.use(cors())
-
-// hier ist genung Platz für alle eure Routen
-app.get('/', (req,res) => {
-    res.status(200).send('Alles OKAY')
-})
+app.use(express.json())
 
 
+app.post('/api/register', encrypt, registerUser)
+app.post('/api/login', encrypt, loginUser)
 
-// dann werfen wir den Server mal an
+
+
+
 app.listen(PORT, () => console.log('Server runs on Port:', PORT))
