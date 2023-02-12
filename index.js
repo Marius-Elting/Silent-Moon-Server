@@ -7,6 +7,7 @@ import { encrypt } from './middleware/auth.js'
 import { favoriteController } from './controller/FavoriteController.js'
 import { addItem } from './controller/contentController.js'
 import { multerUploads } from './controller/filteController.js'
+import { spotifyLoginController, spotifyRefreshController } from './controller/MusicController.js'
 
 const PORT = process.env.PORT
 const app = express()
@@ -16,6 +17,7 @@ const app = express()
 app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 
 
@@ -23,7 +25,11 @@ app.post('/api/register', encrypt, registerUser)
 app.post('/api/login', encrypt, loginUser)
 app.post('/api/favorites', favoriteController)
 app.post('/api/additem', multerUploads, addItem)
+app.get('/api/getSongs',)
 
+//SPOTIFY API
+app.post("/refresh", spotifyRefreshController)
+app.post("/login", spotifyLoginController)
 
 
 
