@@ -2,6 +2,7 @@ import { fileUpload } from "../services/uploadDao.js"
 import fs from "fs"
 import { writeDB } from "../services/writeDBDao.js";
 import cloudinary from "cloudinary"
+import { getDb } from "../util/db.js";
 
 export const uploadImage = async (req, res) => {
     try {
@@ -39,5 +40,17 @@ export const uploadImage = async (req, res) => {
         })
     } catch (err) {
         console.log(err)
+    }
+}
+
+
+export const getExercise = async (req, res) => {
+    try {
+        const db = await getDb()
+        const pointer = await db.collection("exercise").find()
+        const data = await pointer.toArray()
+        res.status(200).json(data)
+    } catch (err) {
+        res.status(500).json({ message: "Database Error" })
     }
 }
