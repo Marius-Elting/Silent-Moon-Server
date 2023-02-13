@@ -8,9 +8,10 @@ export const writeDB = async (req, url) => {
         description: req.body.description,
         duration: req.body.duration,
         level: req.body.level,
+        category: req.body.category
     }
     console.log(newItem)
-    if (!newItem.image || !newItem.name || !newItem.description || !newItem.type || !newItem.duration || !newItem.level) {
+    if (!newItem.image || !newItem.name || !newItem.description || !newItem.type || !newItem.duration || !newItem.level || !newItem.category) {
         throw new Error("Please define all values")
     }
     const db = await getDb()
