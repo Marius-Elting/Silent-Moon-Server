@@ -8,30 +8,28 @@ export const uploadImage = async (req, res) => {
         console.log("first")
         const uploader = async (path) => await fileUpload(path, "Images");
         const urls = []
-        const files = req.files
+        const file = req.files[0]
+        const { path } = file
+        const newPath = await uploader(path)
 
-        for (const file of files) {
-            const { path } = file
-            const newPath = await uploader(path)
-            urls.push(newPath)
-            fs.unlink(path, (err) => {
-                console.log(err)
-            })
-        }
+        fs.unlink(path, (err) => {
+            console.log(err)
+        })
+
         let dbData
         try {
 
-            dbData = await writeDB(req, urls)
+            dbData = await writeDB(req, newPath)
         } catch (err) {
             res.status(500).json({
                 message: "please define all values",
             })
-            urls.forEach(url => {
-                console.log(url.id)
-                cloudinary.uploader.destroy(url.id, (err) => {
-                    console.log(err)
-                })
+
+
+            cloudinary.uploader.destroy(newPath.id, (err) => {
+                console.log(err)
             })
+
             return
         }
 

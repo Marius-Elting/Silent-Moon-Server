@@ -14,6 +14,6 @@ export const writeDB = async (req, url) => {
         throw new Error("Please define all values")
     }
     const db = await getDb()
-    db.collection("exercise").insertOne({})
+    db.collection("exercise").insertOne(newItem)
     return newItem
 }
