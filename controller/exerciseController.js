@@ -3,12 +3,12 @@ import fs from "fs"
 import { writeDB } from "../services/writeDBDao.js";
 import cloudinary from "cloudinary"
 import { getDb } from "../util/db.js";
+import { ObjectID } from "bson";
 
 export const uploadImage = async (req, res) => {
     try {
-        console.log("first")
+
         const uploader = async (path) => await fileUpload(path, "Images");
-        const urls = []
         const file = req.files[0]
         const { path } = file
         const newPath = await uploader(path)
@@ -54,3 +54,17 @@ export const getExercise = async (req, res) => {
         res.status(500).json({ message: "Database Error" })
     }
 }
+
+export const getSingleExercise = async (req, res) => {
+
+    try {
+        const db = await getDb()
+        const pointer = await db.collection("exercise").find({ _id: ObjectID(req.params.id) })
+        const data = await pointer.toArray()
+        res.status(200).json(data)
+    } catch (err) {
+        res.status(500).json({ message: "Database Error" })
+    }
+}
+
+

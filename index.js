@@ -8,7 +8,7 @@ import { encrypt } from './middleware/auth.js'
 import { favoriteController } from './controller/FavoriteController.js'
 import { spotifyLoginController, spotifyRefreshController } from './controller/MusicController.js'
 import { upload } from './middleware/fileSaver.js'
-import { getExercise, uploadImage } from './controller/exerciseController.js'
+import { getExercise, getSingleExercise, uploadImage } from './controller/exerciseController.js'
 
 const PORT = process.env.PORT
 const app = express()
@@ -31,6 +31,7 @@ app.post("/login", spotifyLoginController)
 
 app.post("/api/upload", upload.array("image"), uploadImage)
 app.get("/api/getexercise", getExercise)
+app.get("/api/getsingleexercise/:id", getSingleExercise)
 
 
 app.listen(PORT, () => console.log('Server runs on Port:', PORT))

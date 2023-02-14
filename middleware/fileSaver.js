@@ -15,7 +15,7 @@ const fileFilter = (req, file, cb) => {
     } else {
         cb({ message: "Unsupported file format" }, false)
     }
-    console.log(file)
+
 }
 
 export const upload = multer({
