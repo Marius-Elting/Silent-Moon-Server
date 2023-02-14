@@ -10,7 +10,7 @@ export const writeDB = async (req, url) => {
         level: req.body.level,
         category: req.body.category
     }
-    console.log(newItem)
+
     if (!newItem.image || !newItem.name || !newItem.description || !newItem.type || !newItem.duration || !newItem.level || !newItem.category) {
         throw new Error("Please define all values")
     }
