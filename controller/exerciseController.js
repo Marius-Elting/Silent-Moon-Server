@@ -16,24 +16,18 @@ export const uploadImage = async (req, res) => {
         fs.unlink(path, (err) => {
             console.log(err)
         })
-
         let dbData
         try {
-
             dbData = await writeDB(req, newPath)
         } catch (err) {
             res.status(500).json({
                 message: "please define all values",
             })
-
-
             cloudinary.uploader.destroy(newPath.id, (err) => {
                 console.log(err)
             })
-
             return
         }
-
         res.status(200).json({
             message: "uploaded",
             data: dbData
@@ -68,3 +62,37 @@ export const getSingleExercise = async (req, res) => {
 }
 
 
+export const getAllCategories = async (req, res) => {
+    try {
+        const db = await getDb()
+        const pointer = await db.collection("exercise").find()
+        const data = await pointer.toArray()
+        const categories = []
+        console.log(data)
+        data.forEach((res) => {
+            res.category.forEach((cat) => {
+                if (!categories.includes(cat)) {
+                    categories.push(cat)
+                }
+            })
+        })
+        console.log(categories)
+        res.status(200).json(categories)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: "Database Error" })
+    }
+}
+
+export const getSingleCategory = async (req, res) => {
+    const { category } = req.body
+    try {
+        const db = await getDb()
+        const pointer = await db.collection("exercise").find({ category: category })
+        const data = await pointer.toArray()
+        res.status(200).json(data)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: "Database Error" })
+    }
+}
