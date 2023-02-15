@@ -68,7 +68,6 @@ export const getAllCategories = async (req, res) => {
         const pointer = await db.collection("exercise").find()
         const data = await pointer.toArray()
         const categories = []
-        console.log(data)
         data.forEach((res) => {
             res.category.forEach((cat) => {
                 if (!categories.includes(cat)) {
@@ -76,7 +75,6 @@ export const getAllCategories = async (req, res) => {
                 }
             })
         })
-        console.log(categories)
         res.status(200).json(categories)
     } catch (err) {
         console.log(err)
