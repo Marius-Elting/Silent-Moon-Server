@@ -4,7 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import { editUser, loginUser, registerUser } from './controller/userController.js';
 import { auth, encrypt } from './middleware/auth.js';
-import { favoriteController } from './controller/FavoriteController.js';
+import { addNewFavorite, getAllFavorites } from './controller/FavoriteController.js';
 import { addNewPlayListToDataBase, getAllPlaylists, getSinglePlaylist, spotifyLoginController, spotifyRefreshController } from './controller/MusicController.js';
 import { upload } from './middleware/fileSaver.js';
 import { getExercise, getSingleExercise, addExercise } from './controller/exerciseController.js';
@@ -31,7 +31,9 @@ app.post('/api/register', encrypt, registerUser);
 app.post('/api/login', encrypt, loginUser);
 app.post('/api/editUser', auth, editUser);
 
-app.post('/api/favorites', auth, favoriteController);
+app.post('/api/addfavorites', auth, addNewFavorite);
+app.post("/api/getfavorites/", getAllFavorites);
+
 
 //SPOTIFY API
 app.post("/refresh", auth, spotifyRefreshController);
