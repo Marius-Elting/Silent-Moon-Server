@@ -98,7 +98,7 @@ export const getAllPlaylists = async (req, res) => {
 };
 
 export const getSinglePlaylist = async (req, res) => {
-    console.log(req.params.id);
+
     try {
         const db = await getDb();
         const pointer = await db.collection("playlists").find({ playlistID: req.params.id });

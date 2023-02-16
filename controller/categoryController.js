@@ -1,5 +1,5 @@
 import fs from "fs";
-import { addCategory, addExercise } from "../services/exerciseDao.js";
+import { addCategory } from "../services/exerciseDao.js";
 import cloudinary from "cloudinary";
 import { getDb } from "../util/db.js";
 import { ObjectId } from "mongodb";

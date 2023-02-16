@@ -11,3 +11,11 @@ export const exerciseSchema = Joi.object({
     category: Joi.array().required()
 
 });
+
+export const userSchema = Joi.object({
+    firstname: Joi.string().min(2).required(),
+    lastname: Joi.string().min(2).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+    favorites: Joi.array()
+});
