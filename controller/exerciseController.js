@@ -39,10 +39,11 @@ export const getExercise = async (req, res) => {
 export const getSingleExercise = async (req, res) => {
     try {
         const db = await getDb();
-        const pointer = await db.collection("exercise").find({ _id: ObjectID(req.params.id) });
+        const pointer = await db.collection("exercise").find({ _id: ObjectId(req.params.id) });
         const data = await pointer.toArray();
         res.status(200).json(data);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: "Database Error" });
     }
 };
