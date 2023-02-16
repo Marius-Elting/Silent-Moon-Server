@@ -7,7 +7,8 @@ import { encrypt } from './middleware/auth.js';
 import { favoriteController } from './controller/FavoriteController.js';
 import { addNewPlayListToDataBase, getAllPlaylists, getSinglePlaylist, spotifyLoginController, spotifyRefreshController } from './controller/MusicController.js';
 import { upload } from './middleware/fileSaver.js';
-import { addSingleCategory, getAllCategories, getExercise, getSingleCategory, getSingleExercise, uploadImage } from './controller/exerciseController.js';
+import { getExercise, getSingleExercise, uploadImage } from './controller/exerciseController.js';
+import { addSingleCategory, getAllCategories, getCategoryByType, getSingleCategory } from './controller/categoryController.js';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -39,6 +40,7 @@ app.get("/api/getsingleexercise/:id", getSingleExercise);
 app.get("/api/getcategories", getAllCategories);
 app.post("/api/getsinglecategory", getSingleCategory);
 app.post("/api/createcategory", upload.array("image"), addSingleCategory);
+app.post("/api/getcategorybytype", getCategoryByType);
 
 //Music
 app.get("/api/getmusicpreview/", addNewPlayListToDataBase);

@@ -1,22 +1,22 @@
-import multer from "multer"
+import multer from "multer";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "./uploads")
+        cb(null, "./uploads");
     },
     filename: function (req, file, cb) {
-        cb(null, new Date().toISOString() + "-" + file.originalname)
+        cb(null, new Date().toISOString() + "-" + file.originalname);
     }
-})
+});
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-        cb(null, true)
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png" | file.mimetype === "image/webp") {
+        cb(null, true);
     } else {
-        cb({ message: "Unsupported file format" }, false)
+        cb({ message: "Unsupported file format" }, false);
     }
 
-}
+};
 
 export const upload = multer({
     storage: storage,
