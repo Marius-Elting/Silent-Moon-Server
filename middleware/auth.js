@@ -1,8 +1,10 @@
 import { createHmac } from "crypto";
 import jwt from "jsonwebtoken";
+import { sendCookie } from "../services/authDao.js";
+import { createToken } from "../util/token.js";
 
 export const encrypt = (req, _, next) => {
-    console.log(req);
+
     const hmac = createHmac("sha256", req.body.password);
     req.body.password = hmac.digest("hex");
     next();
@@ -27,15 +29,24 @@ export const authHeader = (req, res, next) => {
         res.end();
     }
 };
+
+
 export const auth = (req, res, next) => {
     const token = req.cookies.token;
 
     try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = { userId: payload.userId };
-        console.log(req.user);
-        console.log("user authenticated");
-        next();
+        if (process.env.APP_MODE === "DEV") {
+            console.log("DEV MODE");
+            const token = createToken({ _id: "DEVMODE" });
+            sendCookie(res, token);
+            next();
+        } else {
+            const payload = jwt.verify(token, process.env.JWT_SECRET);
+            req.user = { userId: payload.userId };
+            console.log("user authenticated");
+            next();
+        }
+
     } catch (err) {
         console.log(err);
         console.log("user unauthenticated");

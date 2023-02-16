@@ -20,7 +20,7 @@ app.use(morgan('dev'));
 // app.use(cors({origin: [process.env.FRONTEND_URL], credentials: true}));
 app.use(cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL,
+    origin: true,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
