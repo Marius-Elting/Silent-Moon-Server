@@ -15,6 +15,7 @@ export const uploadImage = async (req, res) => {
                 data: dbData
             });
         } catch (err) {
+            console.log(err);
             res.status(500).json({ message: "please define all values" });
             cloudinary.uploader.destroy(path.id, (err) => console.log(err));
             return;
