@@ -1,15 +1,15 @@
 import fs from "fs";
-import { addCategory, addExercise } from "../services/exerciseDao.js";
+import { addCategory, sendExercise, getAllExercise, getExercisebyId } from "../services/exerciseDao.js";
 import cloudinary from "cloudinary";
 import { getDb } from "../util/db.js";
 import { ObjectId } from "mongodb";
 import { getUploadPath } from "../services/uploadDao.js";
 
-export const uploadImage = async (req, res) => {
+export const addExercise = async (req, res) => {
     try {
         const path = await getUploadPath(req, res);
         try {
-            const dbData = await addExercise(req, path);
+            const dbData = await sendExercise(req, path);
             res.status(200).json({
                 message: "uploaded",
                 data: dbData
@@ -28,9 +28,7 @@ export const uploadImage = async (req, res) => {
 
 export const getExercise = async (req, res) => {
     try {
-        const db = await getDb();
-        const pointer = await db.collection("exercise").find();
-        const data = await pointer.toArray();
+        const data = await getAllExercise();
         res.status(200).json(data);
     } catch (err) {
         res.status(500).json({ message: "Database Error" });
@@ -39,9 +37,7 @@ export const getExercise = async (req, res) => {
 
 export const getSingleExercise = async (req, res) => {
     try {
-        const db = await getDb();
-        const pointer = await db.collection("exercise").find({ _id: ObjectId(req.params.id) });
-        const data = await pointer.toArray();
+        const data = await getExercisebyId(req);
         res.status(200).json(data);
     } catch (err) {
         console.log(err);
