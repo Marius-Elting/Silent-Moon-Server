@@ -6,18 +6,21 @@ import { getUser } from "../services/userDao.js";
 
 
 export const addNewFavorite = async (req, res) => {
-    const { user, item } = req.body;
-    const id = user.id;
+    const userData = req.body.user.userData;
+    const item = req.body.item;
+    const id = userData._id;
     const db = await getDb();
     const dbUser = await db.collection("user").findOne({ _id: ObjectId(id) });
     if (!dbUser) {
         res.status(500).json({ message: "ERROR" });
         return;
     }
-    if (dbUser.favorites.includes(item)) {
+
+    if (dbUser.favorites.filter(fav => fav.id === item.id).length > 0) {
         try {
             await RemoveFavorite(dbUser, item);
-            res.status(200).json({ message: `Removed FavoriteID ${item}` });
+            res.status(200).json({ favorites: dbUser.favorites, message: `Removed FavoriteID ${item}` });
+
         } catch (err) {
             console.log(err);
             res.status(400).json({ message: "Thats an Error" });
@@ -26,7 +29,7 @@ export const addNewFavorite = async (req, res) => {
     } else {
         try {
             await addFavorite(dbUser, item);
-            res.status(200).json({ dbUser });
+            res.status(200).json({ favorites: dbUser.favorites });
         } catch (err) {
             res.status(400).json({ message: "This is an Error" });
             console.log(err);
