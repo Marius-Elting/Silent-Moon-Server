@@ -73,3 +73,10 @@ export const editUser = async (req, res) => {
 
     res.json(user);
 };
+
+
+export const logoutUser = async (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Successfully logged out" });
+
+};

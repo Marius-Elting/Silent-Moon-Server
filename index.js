@@ -2,7 +2,7 @@ import './config/config.js';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { editUser, loginUser, registerUser } from './controller/userController.js';
+import { editUser, loginUser, logoutUser, registerUser } from './controller/userController.js';
 import { auth, encrypt } from './middleware/auth.js';
 import { addNewFavorite, getAllFavorites } from './controller/FavoriteController.js';
 import { addNewPlayListToDataBase, getAllPlaylists, getSinglePlaylist, spotifyLoginController, spotifyRefreshController } from './controller/MusicController.js';
@@ -30,9 +30,10 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/api/register', encrypt, registerUser);
 app.post('/api/login', encrypt, loginUser);
 app.post('/api/editUser', auth, editUser);
+app.get("/api/logout", logoutUser);
 
 app.post('/api/addfavorites', auth, addNewFavorite);
-app.post("/api/getfavorites/", getAllFavorites);
+app.post("/api/getfavorites", getAllFavorites);
 
 
 //SPOTIFY API
