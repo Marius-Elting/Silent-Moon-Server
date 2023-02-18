@@ -13,9 +13,9 @@ export const exerciseSchema = Joi.object({
 });
 
 export const userSchema = Joi.object({
-    firstname: Joi.string().min(2).required(),
-    lastname: Joi.string().min(2).required(),
-    email: Joi.string().email().required(),
+    firstname: Joi.string().min(2).required().error(err => { err[0].message = "Firstname is to short"; return err; }),
+    lastname: Joi.string().min(2).required().error(err => { err[0].message = "Lastname is to short"; return err; }),
+    email: Joi.string().email().required().error(err => { err[0].message = "Email is not valid"; return err; }),
     password: Joi.string().min(8).required(),
     favorites: Joi.array()
 });
