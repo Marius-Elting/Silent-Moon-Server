@@ -13,7 +13,8 @@ export const registerUser = async (req, res) => {
         lastname,
         email,
         password,
-        favorites: []
+        favorites: [],
+        remindtime: []
     };
     try {
         const userAA = await userSchema.validateAsync(user, { abortEarly: false });
@@ -74,7 +75,7 @@ export const editUser = async (req, res) => {
     const user = req.body.user;
 
     const db = await getDb();
-    db.collection("user").updateOne(
+    await db.collection("user").updateOne(
         { _id: ObjectId(id) },
         { $set: { ...user } }
     );
@@ -87,4 +88,23 @@ export const logoutUser = async (req, res) => {
     res.clearCookie("token");
     res.json({ message: "Successfully logged out" });
 
+};
+
+
+export const setRemindTime = async (req, res) => {
+    const remindTime = req.body.remindTime;
+    console.log(remindTime);
+    console.log(req.body.id);
+    try {
+
+        const db = await getDb();
+        const a = await db.collection("user").updateOne({ _id: ObjectId(req.body.id) }, {
+            $set: { remindTime }
+        });
+        console.log(a);
+        res.json({ remindTime });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ type: "Error", message: "This is an test Error" });
+    }
 };

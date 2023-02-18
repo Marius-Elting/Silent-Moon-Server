@@ -8,7 +8,7 @@ export const exerciseSchema = Joi.object({
     duration: Joi.string().required(),
     level: Joi.string().valid("beginner", "very easy", "challanging", "advanced", "very challenging").required(),
     //ggf hier noch wenn type yoga dann nur die sonst andere
-    category: Joi.array().required()
+    category: Joi.array().required(),
 
 });
 
@@ -17,5 +17,6 @@ export const userSchema = Joi.object({
     lastname: Joi.string().min(2).required().error(err => { err[0].message = "Lastname is to short"; return err; }),
     email: Joi.string().email().required().error(err => { err[0].message = "Email is not valid"; return err; }),
     password: Joi.string().min(8).required(),
-    favorites: Joi.array()
+    favorites: Joi.array(),
+    remindtime: Joi.array(),
 });
