@@ -8,24 +8,32 @@ import { sendCookie } from "../services/authDao.js";
 export const registerUser = async (req, res) => {
     const { firstname, lastname, email, password } = req.body;
     const db = await getDb();
-    const newUser = await userSchema.validateAsync({
+    const user = {
         firstname,
         lastname,
         email,
         password,
         favorites: []
-    });
+    };
+    try {
+        const userAA = await userSchema.validateAsync(user, { abortEarly: false });
+    } catch (err) {
+        const errMessage = err.details.map(de => de.message.replace('\"', "").replace('"', ""));
+        res.status(500).json({ type: "Error", message: errMessage });
+        return;
+    }
+
     const userExists = await db.collection("user").findOne({ email });
     try {
         if (userExists) {
             res.status(400).json({ message: "Email already in use" });
         } else {
             try {
-                const token = createToken(newUser);
-                await db.collection("user").insertOne(newUser);
-                delete newUser.password;
+                const token = createToken(user);
+                await db.collection("user").insertOne(user);
+                delete user.password;
                 sendCookie(res, token);
-                res.status(200).json({ message: "user created", newUser, token });
+                res.status(200).json({ message: "user created", user, token });
             } catch (err) {
                 console.log(err);
                 res.status(500), json({ message: "error" });

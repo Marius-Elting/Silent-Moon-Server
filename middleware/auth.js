@@ -2,6 +2,7 @@ import { createHmac } from "crypto";
 import jwt from "jsonwebtoken";
 import { sendCookie } from "../services/authDao.js";
 import { createToken } from "../util/token.js";
+import { exerciseSchema } from "./validator.js";
 
 export const encrypt = (req, _, next) => {
 
@@ -26,6 +27,7 @@ export const authHeader = (req, res, next) => {
     } catch (err) {
         console.log(err);
         console.log("user unauthenticated");
+        res.status(500).json({ message: "User Unauthenticated" });
         res.end();
     }
 };
@@ -50,6 +52,7 @@ export const auth = (req, res, next) => {
     } catch (err) {
         console.log(err);
         console.log("user unauthenticated");
+        res.status(500).json({ message: "User Unauthenticated", type: "Error" });
         res.end();
     }
 };
