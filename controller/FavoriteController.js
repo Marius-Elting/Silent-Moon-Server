@@ -6,8 +6,13 @@ import { getUser } from "../services/userDao.js";
 
 
 export const addNewFavorite = async (req, res) => {
-    const userData = req.body.user.userData;
-    const item = req.body.item;
+    try {
+        const userData = req.body.user.userData;
+        const item = req.body.item;
+    } catch (err) {
+        res.end();
+        return;
+    }
     const id = userData._id;
     const db = await getDb();
     const dbUser = await db.collection("user").findOne({ _id: ObjectId(id) });

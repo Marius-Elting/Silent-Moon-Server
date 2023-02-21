@@ -6,7 +6,7 @@ export const exerciseSchema = Joi.object({
     type: Joi.string().valid("yoga", "meditation").required(),
     description: Joi.string(),
     duration: Joi.string().required(),
-    level: Joi.string().valid("beginner", "very easy", "challanging", "advanced", "very challenging").required(),
+    level: Joi.string().valid("beginner", "very easy", "challanging", "advanced", "very challenging", "expert").required(),
     //ggf hier noch wenn type yoga dann nur die sonst andere
     category: Joi.array().required(),
 
