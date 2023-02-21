@@ -44,6 +44,7 @@ app.post("/login", auth, spotifyLoginController);
 app.post("/api/upload", auth, upload.array("image"), addExercise);
 app.get("/api/getexercise", auth, getExercise);
 app.get("/api/getsingleexercise/:id", auth, getSingleExercise);
+
 //Categories
 app.get("/api/getcategories", auth, getAllCategories);
 app.post("/api/getsinglecategory", auth, getSingleCategory);
