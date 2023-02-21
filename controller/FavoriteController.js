@@ -6,9 +6,11 @@ import { getUser } from "../services/userDao.js";
 
 
 export const addNewFavorite = async (req, res) => {
+    let userData;
+    let item;
     try {
-        const userData = req.body.user.userData;
-        const item = req.body.item;
+        userData = req.body.user.userData;
+        item = req.body.item;
     } catch (err) {
         res.end();
         return;
