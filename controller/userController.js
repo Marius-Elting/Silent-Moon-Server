@@ -1,6 +1,6 @@
 import { getDb } from "../util/db.js";
 import jwt from "jsonwebtoken";
-import { createToken } from "../util/token.js";
+import { createToken, verifyToken } from "../util/token.js";
 import { ObjectId } from "mongodb";
 import { userSchema } from "../middleware/validator.js";
 import { sendCookie } from "../services/authDao.js";
@@ -108,3 +108,28 @@ export const setRemindTime = async (req, res) => {
         res.status(500).json({ type: "Error", message: "This is an test Error" });
     }
 };
+
+
+
+export const isUserAuth = async (req, res) => {
+    const token = req.cookies.token
+    if (!token) {
+        res.status(401).json({ type: "Error", message: "Unauthorized" })
+        return
+    }
+    try {
+        const result = verifyToken(token)
+        const db = await getDb()
+        const user = await db.collection("user").findOne({ _id: new ObjectId(result.userId) })
+        const newToken = createToken(user)
+        sendCookie(res, newToken);
+        res.json({ user, token: newToken })
+    } catch (err) {
+        console.log(err)
+        res.status(401).json({ type: "Error", message: "Unauthorized" })
+        return
+    }
+
+
+
+}

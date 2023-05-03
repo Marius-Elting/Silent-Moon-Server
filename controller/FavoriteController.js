@@ -49,10 +49,15 @@ export const addNewFavorite = async (req, res) => {
 export const getAllFavorites = async (req, res) => {
     const user = await getUser(req, res);
     const type = req.body.type;
-    const favoriteIDs = type === "all" ? user.favorites : user.favorites.filter(fav => fav.type === type);
-    const db = await getDb();
-    const favPointer = await db.collection('exercise').find({ "_id": { "$in": favoriteIDs.map(fay => ObjectId(fay.id)) } });
-    const favorites = await favPointer.toArray();
+    try {
+        const favoriteIDs = type === "all" ? user.favorites : user.favorites.filter(fav => fav.type === type);
+        const db = await getDb();
+        const favPointer = await db.collection('exercise').find({ "_id": { "$in": favoriteIDs.map(fay => ObjectId(fay.id)) } });
+        const favorites = await favPointer.toArray();
 
-    res.status(200).json({ user, favorites });
+        res.status(200).json({ user, favorites });
+    } catch (err) {
+        res.status(400).json({ message: "This is an Error" });
+        console.log(err);
+    }
 };

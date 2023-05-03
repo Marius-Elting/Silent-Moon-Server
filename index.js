@@ -2,7 +2,7 @@ import './config/config.js';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { editUser, loginUser, logoutUser, registerUser, setRemindTime } from './controller/userController.js';
+import { editUser, isUserAuth, loginUser, logoutUser, registerUser, setRemindTime } from './controller/userController.js';
 import { auth, encrypt } from './middleware/auth.js';
 import { addNewFavorite, getAllFavorites } from './controller/FavoriteController.js';
 import { addNewPlayListToDataBase, getAllPlaylists, getSinglePlaylist, spotifyLoginController, spotifyRefreshController } from './controller/MusicController.js';
@@ -11,7 +11,7 @@ import { getExercise, getSingleExercise, addExercise } from './controller/exerci
 import { addSingleCategory, getAllCategories, getCategoryByType, getSingleCategory } from './controller/categoryController.js';
 import cookieParser from "cookie-parser";
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 7777;
 const app = express();
 
 app.use(cookieParser());
@@ -35,6 +35,8 @@ app.get("/api/logout", logoutUser);
 app.post('/api/addfavorites', auth, addNewFavorite);
 app.post("/api/getfavorites", auth, getAllFavorites);
 app.post("/api/setremindme", auth, setRemindTime);
+
+app.get("/api/isAuth", isUserAuth)
 
 //SPOTIFY API
 app.post("/refresh", auth, spotifyRefreshController);
