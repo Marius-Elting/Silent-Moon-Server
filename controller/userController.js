@@ -17,12 +17,13 @@ export const registerUser = async (req, res) => {
         remindtime: []
     };
     try {
-        const userAA = await userSchema.validateAsync(user, { abortEarly: false });
+        await userSchema.validateAsync(user, { abortEarly: false });
     } catch (err) {
         const errMessage = err.details.map(de => de.message.replace('\"', "").replace('"', ""));
         res.status(500).json({ type: "Error", message: errMessage });
         return;
     }
+
 
     const userExists = await db.collection("user").findOne({ email });
     try {
@@ -30,8 +31,9 @@ export const registerUser = async (req, res) => {
             res.status(400).json({ message: "Email already in use" });
         } else {
             try {
+                const dbResult = await db.collection("user").insertOne(user);
+                user.id = dbResult._id
                 const token = createToken(user);
-                await db.collection("user").insertOne(user);
                 delete user.password;
                 sendCookie(res, token);
                 res.status(200).json({ message: "user created", user, token });
@@ -50,22 +52,26 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     const { email, password } = req.body;
-    const db = await getDb();
     if (!email || !password) {
         res.status(400).json({ message: "Please insert information" });
         return;
-    }
-    const user = await db.collection("user").findOne({ email });
-    if (!user) {
-        res.status(400).json({ message: "user does not exists" });
-    }
-    if (password !== user.password) {
-        res.status(400).json({ message: "email or password is not correct" });
-    } else {
-        delete user.password;
-        const token = createToken(user);
-        sendCookie(res, token);
-        res.status(200).json({ message: "loggedin", user, token });
+    } try {
+        const db = await getDb();
+        const user = await db.collection("user").findOne({ email });
+        if (!user) {
+            res.status(401).json({ message: "user does not exists" });
+        }
+        if (password !== user.password) {
+            res.status(401).json({ message: "email or password is not correct" });
+        } else {
+            delete user.password;
+            const token = createToken(user);
+            sendCookie(res, token);
+            res.status(200).json({ message: "loggedin", user, token });
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(401).json({ message: "Login Error" });
     }
 };
 
@@ -85,7 +91,7 @@ export const editUser = async (req, res) => {
 
 
 export const logoutUser = async (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", { path: '/' });
     res.json({ message: "Successfully logged out" });
 
 };
@@ -119,6 +125,7 @@ export const isUserAuth = async (req, res) => {
     }
     try {
         const result = verifyToken(token)
+        console.log(result)
         const db = await getDb()
         const user = await db.collection("user").findOne({ _id: new ObjectId(result.userId) })
         const newToken = createToken(user)
@@ -133,3 +140,8 @@ export const isUserAuth = async (req, res) => {
 
 
 }
+
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Y1MWMxMDYxMWVkZjYzMjllYTdjOWEiLCJpYXQiOjE2ODMxMzg0ODEsImV4cCI6MTY4MzE0MDI4MX0.RKXjbM-veHhMrZk30Q9UkpF5MD7w9A6NxNgNDxC1vYQ
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Y1MWMxMDYxMWVkZjYzMjllYTdjOWEiLCJpYXQiOjE2ODMxMzg1NTQsImV4cCI6MTY4MzE0MDM1NH0.m1V77mRPyLgDnocM4i_wCyVCpdMjyt7slp-j674vhRM
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2M2Y1MWMxMDYxMWVkZjYzMjllYTdjOWEiLCJpYXQiOjE2ODMxMzg1NjksImV4cCI6MTY4MzE0MDM2OX0.RTW5iXncHm2okfqNrIN3Di1ZK7hin73XIR3ThHl4SYY
