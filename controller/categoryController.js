@@ -30,9 +30,7 @@ export const addSingleCategory = async (req, res) => {
 export const getAllCategories = async (req, res) => {
     try {
         const db = await getDb();
-        const pointer = await db.collection("category").find();
-        const data = await pointer.toArray();
-
+        const data = await db.collection("category").find().toArray();
         res.status(200).json(data);
     } catch (err) {
         console.log(err);
@@ -44,8 +42,7 @@ export const getSingleCategory = async (req, res) => {
     const { category } = req.body;
     try {
         const db = await getDb();
-        const pointer = await db.collection("exercise").find({ category: category });
-        const data = await pointer.toArray();
+        const data = await db.collection("exercise").find({ category: category }).toArray();
         res.status(200).json(data);
     } catch (err) {
         console.log(err);
@@ -58,8 +55,7 @@ export const getCategoryByType = async (req, res) => {
     const { type } = req.body;
     try {
         const db = await getDb();
-        const pointer = await db.collection("category").find({ type: type });
-        const data = await pointer.toArray();
+        const data = await db.collection("category").find({ type: type }).toArray();
         res.status(200).json(data);
     } catch (err) {
         console.log(err);
