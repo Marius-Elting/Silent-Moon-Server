@@ -99,14 +99,15 @@ export const logoutUser = async (req, res) => {
 
 export const setRemindTime = async (req, res) => {
     const remindTime = req.body.remindTime;
-    console.log(remindTime);
-    console.log(req.body.id);
     try {
 
         const db = await getDb();
-        const a = await db.collection("user").updateOne({ _id: ObjectId(req.body.id) }, {
-            $set: { remindTime }
-        });
+        const a = await db.collection("user").updateOne(
+            { _id: ObjectId(req.body.id) },
+            {
+                $set: { remindTime }
+            }
+        );
         console.log(a);
         res.json({ remindTime });
     } catch (err) {

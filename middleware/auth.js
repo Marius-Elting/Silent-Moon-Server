@@ -22,11 +22,9 @@ export const authHeader = (req, res, next) => {
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         req.user = { userId: payload.userId };
-        console.log("user authenticated");
         next();
     } catch (err) {
         console.log(err);
-        console.log("user unauthenticated");
         res.status(500).json({ message: "User Unauthenticated" });
         res.end();
     }
@@ -38,20 +36,17 @@ export const auth = (req, res, next) => {
 
     try {
         if (process.env.APP_MODE === "DEV") {
-            console.log("DEV MODE");
             const token = createToken({ _id: "DEVMODE" });
             sendCookie(res, token);
             next();
         } else {
             const payload = jwt.verify(token, process.env.JWT_SECRET);
             req.user = { userId: payload.userId };
-            console.log("user authenticated");
             next();
         }
 
     } catch (err) {
         console.log(err);
-        console.log("user unauthenticated");
         res.status(500).json({ message: "User Unauthenticated", type: "Error" });
         res.end();
     }
